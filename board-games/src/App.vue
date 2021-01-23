@@ -25,6 +25,7 @@ import ConfirmDialog from './components/ConfirmDialog'
 import UserDetails from './components/UserDetails'
 import GroupDetails from './components/GroupDetails'
 import GroupSearch from './components/GroupSearch'
+import PlayerSearch from './components/PlayerSearch'
 
 export default {
   name: 'App',
@@ -34,6 +35,7 @@ export default {
     GameSearch,
     ConfirmDialog,
     GroupSearch,
+    PlayerSearch,
     UserDetails,
   },
   mounted() {

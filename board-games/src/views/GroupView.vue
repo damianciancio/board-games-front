@@ -11,13 +11,18 @@
                         {{ member.player.name }}
                     </span>
                     <span v-if="member.is_admin" >Administrador!</span>
-                    <span v-if="member.status != 'accepted'" ><button v-if="currentUserIsAdminOfGroup" v-on:click="acceptMember(member)"></button> de aceptación</span>
+                    <span v-if="member.status != 'accepted'" >Pendiente de aceptación <button v-if="currentUserIsAdminOfGroup" v-on:click="acceptMember(member)">Aceptar</button></span>
                 </li>
             </ul>
+        </div>
+        <div class="form-group">
+            <label>Agregar usuario</label>
+            <player-search v-on:change="addUserToGroup($event)" ></player-search>
         </div>
     </div>
 </template>
 <script>
+import PlayerSearch from '../components/PlayerSearch'
 export default {
     data() {
         return {
@@ -27,29 +32,60 @@ export default {
             }
         }
     },
+    components:{
+        PlayerSearch
+    },
     computed: {
         currentUser() {
             return this.$store.getters.currentUser;
+        },
+        groupMembersIds() {
+            return this.group.members.map(mem => mem.player._id);
+        },
+        currentUserIsAdminOfGroup() {
+            return this.group.members.some(member => {
+                return member.player._id == this.currentUser._id && member.is_admin;
+            });
         }
     },
     mounted() {
-        let groupId = this.$route.params.id;
-        let request = this.$store.dispatch('getGroup', groupId);
-        request.then(response => {
-            console.log(response);
-            if (response.status == 200) {
-                this.group = response.data.group;
-            }
-        });
+        this.refreshGroup();
     },
     methods: {
-        currentUserIsAdminOfGroup() {
-            this.group.members.some(member => {
-                return member.player._id == this.currentUser._id && member.is_admin;
+        refreshGroup() {
+            let groupId = this.$route.params.id;
+            let request = this.$store.dispatch('getGroup', groupId);
+            request.then(response => {
+                if (response.status == 200) {
+                    this.group = response.data.group;
+                }
             });
         },
         acceptMember(member) {
+            if (member.status != 'accepted' && this.currentUserIsAdminOfGroup) {
+                let request = this.$store.dispatch('updateGroupMemberStatus', {user_id: member._id, group_id: this.group._id, status: "accepted"});
+                request.then(resp => {
+                    this.refreshGroup();
+                })
+            }
+        },
+        addUserToGroup(user) {
 
+            if(this.groupMembersIds.includes(user.selected)) {
+                return false;
+            }
+
+            let initialStatus = 'pending';
+            if (this.currentUserIsAdminOfGroup) {
+                initialStatus = 'accepted';
+            }
+
+            var request = this.$store.dispatch('addUserMember', {user_id: user.selected, group_id: this.group._id, initialStatus: initialStatus});
+            request.then(resp => {
+                if (resp.status == 200) {
+                    this.refreshGroup();
+                }
+            });
         }
     }
 }
