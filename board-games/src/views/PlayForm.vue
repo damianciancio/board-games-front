@@ -1,18 +1,12 @@
 <template>
     <div>
         <div class="form-group">
-            <label>Nombre</label>
-            <input class="form-input" type="text" v-model="play.name">
+            <label>Titulo de la partida</label>
+            <input class="form-control" type="text" v-model="play.name">
         </div>
         <div class="form-group">
             <label>Duración (en minutos)</label>
-            <input class="form-input" type="number" v-model="play.duration">
-        </div>
-        <div class="form-group">
-            <label>Juego</label>
-            <game-search
-                v-on:change="setGame($event)"
-            ></game-search>
+            <input class="form-control" type="number" v-model="play.duration">
         </div>
         <div class="form-group">
             <label> Grupo </label>
@@ -22,13 +16,20 @@
                 </option>
             </select>
         </div>
+        <div class="form-group">
+            <label>Juego</label>
+            <game-search
+                v-on:change="setGame($event)"
+                :group="play.group"
+            ></game-search>
+        </div>
         <div v-if="selectedGroup">
             <v-autocomplete 
                 v-model="memberToAdd"
                 :items="selectedGroup.members"
                 label="Agregar miembros"
                 item-text="player.name"
-                item-value="_id"
+                item-value="player._id"
                 v-on:change="addMember"
             >
             </v-autocomplete>
@@ -71,7 +72,7 @@ export default {
     computed: {
         selectedMembers() {
             return this.selectedGroup.members.filter(mem => {
-                return this.play.players.includes(mem._id)
+                return this.play.players.includes(mem.player._id)
             });
         }
     },

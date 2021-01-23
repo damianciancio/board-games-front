@@ -10,6 +10,7 @@ import MyGroups from '../views/MyGroups'
 import PlayForm from '../views/PlayForm'
 import GroupView from '../views/GroupView'
 import GroupForm from '../views/GroupForm'
+import MyPlays from '../views/MyPlays'
 
 Vue.use(VueRouter)
 
@@ -58,6 +59,11 @@ const routes = [
     path: '/plays/new',
     name: 'newplay',
     component: PlayForm
+  },
+  {
+    path: '/plays',
+    name: 'myplays',
+    component: MyPlays
   }
 ]
 
