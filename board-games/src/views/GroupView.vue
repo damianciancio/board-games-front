@@ -65,15 +65,17 @@ export default {
         refreshGroup() {
             let groupId = this.$route.params.id;
             let request = this.$store.dispatch('getGroup', groupId);
+            let app = this;
             request.then(response => {
                 if (response.status == 200) {
-                    this.group = response.data.group;
-                    let requestPlays = this.$store.dispatch('getPlaysByGroup', groupId);
-                    requestPlays.then(resp => {
-                        if (resp.status == 200) {
-                            this.group.plays = resp.data;
-                        }
-                    });
+                    app.group = response.data.group;
+                }
+            });
+            let requestPlays = this.$store.dispatch('getPlaysByGroup', groupId);
+            requestPlays.then(resp => {
+                if (resp.status == 200) {
+                    app.group.plays = resp.data;
+                    this.$forceUpdate();
                 }
             });
         },
