@@ -1,23 +1,34 @@
 <template>
-    <div>
-        <h3>Registrate!</h3>
-        <form>
-            <div class="form-group">
-                <label>
-                    Nombre de usuario
-                </label>
-                <input v-model="username" type="text" class="form-control">
+    <div id="register">
+        <div class="row">
+            <div class="col-md-6">
+                <div id="title" class="d-flex flex-column justify-content-center">
+                    <h1>Sistema lúdico</h1>
+                </div>
             </div>
-            <div class="form-group">
-                <label>
-                    Nombre y apellido
-                </label>
-                <input v-model="name" type="text" class="form-control">
+            <div class="col-md-6">
+                <div class="d-flex flex-column justify-content-center">
+                    <h3>Registro</h3>
+                    <form>
+                        <div class="form-group">
+                            <label>
+                                Nombre de usuario
+                            </label>
+                            <input v-model="username" type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                Nombre y apellido
+                            </label>
+                            <input v-model="name" type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <button v-on:click="register" class="btn btn-primary">Registrarse</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <button v-on:click="register" class="btn btn-primary">Registrarse</button>
-            </div>
-        </form>
+        </div>
     </div>
 </template>
 <script>
@@ -42,3 +53,10 @@ export default {
     }
 }
 </script>
+<style>
+    #register .d-flex {
+        height: 80vh;;
+    }
+    #title {
+    }
+</style>
