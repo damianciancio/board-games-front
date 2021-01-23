@@ -6,7 +6,10 @@ const PlaysStore = {
         },
         getCurrentUserPlays(store) {
             return axios.get(store.state.apiRoot + "/plays/my-plays");
-        }
+        },
+        getPlaysByGroup(store, group_id) {
+            return axios.get(store.state.apiRoot + "/plays/", {group_id: group_id});
+        },
     }
 }
 

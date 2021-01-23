@@ -19,21 +19,28 @@
             <label>Agregar usuario</label>
             <player-search v-on:change="addUserToGroup($event)" ></player-search>
         </div>
+        <div>
+            <h4>Partidas</h4>
+            <play-details v-for="play in group.plays" :key="play._id" :play="play" ></play-details>
+        </div>
     </div>
 </template>
 <script>
+import PlayDetails from '../components/PlayDetails.vue';
 import PlayerSearch from '../components/PlayerSearch'
 export default {
     data() {
         return {
             group: {
                 name: "",
-                members: []
+                members: [],
+                plays: []
             }
         }
     },
     components:{
-        PlayerSearch
+        PlayerSearch,
+        PlayDetails
     },
     computed: {
         currentUser() {
@@ -58,6 +65,12 @@ export default {
             request.then(response => {
                 if (response.status == 200) {
                     this.group = response.data.group;
+                    let requestPlays = this.$store.dispatch('getPlaysByGroup', groupId);
+                    requestPlays.then(resp => {
+                        if (resp.status == 200) {
+                            this.group.plays = resp.data;
+                        }
+                    });
                 }
             });
         },

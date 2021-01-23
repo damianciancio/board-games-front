@@ -26,6 +26,7 @@ import UserDetails from './components/UserDetails'
 import GroupDetails from './components/GroupDetails'
 import GroupSearch from './components/GroupSearch'
 import PlayerSearch from './components/PlayerSearch'
+import PlayDetails from './components/PlayDetails'
 
 export default {
   name: 'App',
@@ -37,6 +38,7 @@ export default {
     GroupSearch,
     PlayerSearch,
     UserDetails,
+    PlayDetails
   },
   mounted() {
     let accessToken = window.localStorage.getItem('board_games_access_token');

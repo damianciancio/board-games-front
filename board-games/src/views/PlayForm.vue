@@ -103,10 +103,10 @@ export default {
             this.play.players.push(this.memberToAdd);
         },
         setAsWinner(member) {
-            this.play.winner = member._id;
+            this.play.winner = member.player._id;
         },
         isMemberWinner(member) {
-            return this.play.winner == member._id;
+            return this.play.winner == member.player._id;
         },
         removeWinner() {
             return this.play.winner = "";
