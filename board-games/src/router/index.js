@@ -6,6 +6,10 @@ import MyGames from '../views/MyGames.vue'
 import GameForm from '../views/GameForm.vue'
 import UserProfile from '../views/UserProfile'
 import store from '../store'
+import MyGroups from '../views/MyGroups'
+import PlayForm from '../views/PlayForm'
+import GroupView from '../views/GroupView'
+import GroupForm from '../views/GroupForm'
 
 Vue.use(VueRouter)
 
@@ -34,6 +38,26 @@ const routes = [
     path: '/profile/:id',
     name: 'userprofile',
     component: UserProfile
+  },
+  {
+    path: '/group/new',
+    name: 'groupnew',
+    component: GroupForm
+  },
+  {
+    path: '/group/:id',
+    name: 'groupview',
+    component: GroupView
+  },
+  {
+    path: '/my-groups',
+    name: 'mygroups',
+    component: MyGroups
+  },
+  {
+    path: '/plays/new',
+    name: 'newplay',
+    component: PlayForm
   }
 ]
 

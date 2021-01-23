@@ -1,5 +1,6 @@
 <template>
     <div>
+        <h3>Registrate!</h3>
         <form>
             <div class="form-group">
                 <label>
@@ -32,7 +33,7 @@ export default {
             var request = this.$store.dispatch('register', {username: this.username, name: this.name});
             request.then(resp => {
                 if (resp.status == 200) {
-                    this.$route.push('/');
+                    this.$router.push('/');
                 } else {
                     alert('Hubo un problema al crear el usuario');
                 }

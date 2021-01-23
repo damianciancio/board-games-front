@@ -43,7 +43,6 @@ export default {
     mounted() {
         let request = this.$store.dispatch('getCurrentUserGames');
         request.then(resp => {
-            console.log(resp);
             if (resp.status == 200) {
                 this.games = resp.data.games;
             }

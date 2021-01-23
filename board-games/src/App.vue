@@ -2,43 +2,19 @@
   <v-app>
     <v-app-bar
       app
-      color="primary"
       dark
     >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
+      <router-link :to="{name: 'mygames'}">Mis juegos</router-link>
+      <router-link :to="{name: 'addgame'}">Agregar juego</router-link>
+      <router-link v-if="!isLoggedIn" :to="{name: 'userprofile', params: { id: $store.getters.currentUser._id }}">Agregar juego</router-link>
+      <router-link :to="{name: 'mygroups'}">Mis grupos</router-link>
+      <router-link :to="{name: 'newplay'}">Cargar partida</router-link>
     </v-app-bar>
 
     <v-main>
-      <router-view></router-view>
+      <div id="main-container" class="container">
+        <router-view></router-view>
+      </div>
     </v-main>
   </v-app>
 </template>
@@ -47,19 +23,38 @@
 import GameSearch from './components/GameSearch'
 import ConfirmDialog from './components/ConfirmDialog'
 import UserDetails from './components/UserDetails'
-
+import GroupDetails from './components/GroupDetails'
+import GroupSearch from './components/GroupSearch'
 
 export default {
   name: 'App',
 
   components: {
+    GroupDetails,
     GameSearch,
     ConfirmDialog,
-    UserDetails
+    GroupSearch,
+    UserDetails,
   },
-
+  mounted() {
+    let accessToken = window.localStorage.getItem('board_games_access_token');
+    if (accessToken) {
+      this.$store.commit('setToken', accessToken);
+      this.$store.commit('updateHeaders');
+    }
+  },
+  methods: {
+    isLoggedIn() {
+      return this.$store.getters.currentUser != null;
+    }
+  },
   data: () => ({
     //
   }),
 };
 </script>
+<style>
+#main-container {
+  padding-top: 40px;;
+}
+</style>

@@ -1,5 +1,6 @@
 <template>
     <div>
+        <h3>Iniciar sesión</h3>
         <form>
             <div class="form-group">
                 <label>
@@ -35,7 +36,7 @@ export default {
                     if (resp.status != 200) {
                         alert('Error en las credenciales, por favor, intente nuevamente')
                     } else {
-                        this.$router.push('/');
+                        this.$router.push('/my-groups');
                     }
                 });
             }

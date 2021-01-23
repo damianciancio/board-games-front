@@ -2,8 +2,9 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios';
 import { GamesStore } from './games';
-import { PlayersStore } from './players'
-
+import { PlayersStore } from './players';
+import { GroupsStore } from './groups';
+import { PlaysStore } from './plays';
 
 Vue.use(Vuex);
 
@@ -35,6 +36,8 @@ export default new Vuex.Store({
   actions: {
     ...GamesStore.actions,
     ...PlayersStore.actions,
+    ...GroupsStore.actions,
+    ...PlaysStore.actions,
     login(store, loginData) {
       var request = axios.post(store.state.apiRoot + "/register/login", loginData)
 
@@ -42,6 +45,7 @@ export default new Vuex.Store({
         {
           if (resp.status == 200) {
             store.commit('setToken', resp.data.token);
+            store.dispatch('setTokenInStorage', resp.data.token);
             store.commit('setCurrentUser', resp.data.user);
             store.commit('updateHeaders');
           }
@@ -49,6 +53,9 @@ export default new Vuex.Store({
       );
 
       return request;
+    },
+    setTokenInStorage(store, token) {
+      return window.localStorage.setItem('board_games_access_token', token);
     },
     register(store, registrationData) {
       var request = axios.post(store.state.apiRoot + "/register", registrationData);
