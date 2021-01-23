@@ -11,6 +11,7 @@ import PlayForm from '../views/PlayForm'
 import GroupView from '../views/GroupView'
 import GroupForm from '../views/GroupForm'
 import MyPlays from '../views/MyPlays'
+import PlayView from '../views/PlayView'
 
 Vue.use(VueRouter)
 
@@ -64,6 +65,11 @@ const routes = [
     path: '/plays',
     name: 'myplays',
     component: MyPlays
+  },
+  {
+    path: '/plays/:id',
+    name: 'playview',
+    component: PlayView
   }
 ]
 

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div> {{ play.name }} </div>
+        <div><router-link :to="{name: 'playview', params: { id: play._id } }" > {{ play.name }}</router-link> </div>
         <div> {{ play.game.name }} </div>
         <div> {{ play.date }} </div>
         <div> {{ play.duration }} minutos</div>
@@ -12,7 +12,8 @@
 export default {
     data() {
         return {}
-    },props: ['play'],
+    },
+    props: ['play'],
     methods: {
         isPlayerWinner(id, play) {
             console.log(play.winner);

@@ -21,7 +21,10 @@
         </div>
         <div>
             <h4>Partidas</h4>
-            <play-details v-for="play in group.plays" :key="play._id" :play="play" ></play-details>
+            <div v-for="play in group.plays" :key="play._id">
+                asd
+                <play-details  :play="play" ></play-details>
+            </div>
         </div>
     </div>
 </template>
