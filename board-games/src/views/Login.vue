@@ -46,12 +46,18 @@ export default {
             if (this.validate()) {
                 var request = this.$store.dispatch('login', {username: this.username, password: this.password});
                 request.then(resp => {
-                    if (resp.status != 200) {
-                        alert('Error en las credenciales, por favor, intente nuevamente')
-                    } else {
+                    if (resp.status == 200) {
+                        console.log('router push')
                         this.$router.push('/my-groups');
                     }
-                });
+                })
+                .catch(err => {
+                    if (err.response.status == 404 || err.response.status == 401) {
+                        this.notify("Error en las credenciales", 'error');
+                        return;
+                    }
+
+                })
             }
         },
         validate() {

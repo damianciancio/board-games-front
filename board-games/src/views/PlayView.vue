@@ -3,7 +3,6 @@
         <h3>{{ play.name }}</h3>
         <h5>
             Comentarios
-
         </h5>
         <div v-for="comment in play.comments" :key="comment.date" >
             {{ comment.comment }}
@@ -40,6 +39,21 @@ export default {
                 if (resp.status == 200) {
                 }
             })
+        },
+        validateComment() {
+            let errors = [];
+
+            if (this.currentComment.trim() == "") {
+                errors.push('Ingrese el texto del comentario');
+            }
+
+            if (errors.length) {
+                let app = this;
+                errors.forEach(err => app.notify(err, "error"));
+                return false;
+            }
+
+            return true;
         }
     }
 }

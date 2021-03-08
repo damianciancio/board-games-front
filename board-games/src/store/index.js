@@ -8,29 +8,59 @@ import { PlaysStore } from './plays';
 
 Vue.use(Vuex);
 
+const updateHeaders = (token) => { axios.defaults.headers.common = {
+  "Authorization": "Bearer " + token,
+  'token': token
+};}
+
+let user;
+const tokenData = localStorage.getItem('juegosmesa-jwt');
+if (tokenData) {
+  let payload = tokenData.split(".")[1];
+  payload = window.atob(payload);
+  user = JSON.parse(payload);
+  if (!(user.exp > (Date.now() / 1000))) {
+    console.log(1);
+    user = null;
+  } else {
+    updateHeaders(tokenData);
+  }
+} 
+
+const initialState = user
+? { status: { loggedIn: true }, user }
+: { status: { loggedIn: false }, user: null };
+
+console.log(initialState);
 export default new Vuex.Store({
   state: {
-    currentUser: null,
+    ...initialState,
     token: null,
     apiRoot: '/api'
   },
   mutations: {
     setToken(state, token) {
       state.token = token;
+      localStorage.setItem("juegosmesa-jwt", token);
     },
     setCurrentUser(state, user) {
-      state.currentUser = user;
     },
     logout(state) {
       state.token = "";
-      state.currentUser = null;
+      window.localStorage.removeItem("juegosmesa-jwt");
+      state.status.loggedIn = false;
+      state.user = null;
     },
     updateHeaders(state) {
-      axios.defaults.headers.common = {
-        "Authorization": "Bearer " + state.token,
-        'token': state.token
-      };
-
+      updateHeaders(state.token);
+    },
+    loggedIn(state, {token, user}) {
+      state.user = user;
+      window.localStorage.setItem('juegosmesa-jwt', token);
+      state.token = token;
+      console.log("state.status.loggedIn = true")
+      state.status.loggedIn = true;
+      updateHeaders(token);
     }
   },
   actions: {
@@ -44,27 +74,29 @@ export default new Vuex.Store({
       request.then(resp => 
         {
           if (resp.status == 200) {
-            store.commit('setToken', resp.data.token);
-            store.dispatch('setTokenInStorage', resp.data.token);
-            store.commit('setCurrentUser', resp.data.user);
-            store.commit('updateHeaders');
+            console.log('loggedin')
+            store.commit('loggedIn', {token: resp.data.token, user: resp.data.user});
           }
         }
       );
 
       return request;
     },
-    setTokenInStorage(store, token) {
-      return window.localStorage.setItem('board_games_access_token', token);
+    loadCurrentUser(store) {
+      var request = axios.get(store.state.apiRoot + '/players/current-user');
+      request.then(resp => {
+        if (resp.status == 200) {
+          store.commit('setCurrentUser', resp.data.user)
+        }
+      });
+      return request;
     },
     register(store, registrationData) {
       var request = axios.post(store.state.apiRoot + "/register", registrationData);
       request.then(resp => 
         {
           if (resp.status == 200) {
-            store.commit('setToken', resp.data.token);
-            store.commit('setCurrentUser', resp.data.user);
-            store.commit('updateHeaders');
+            store.commit('loggedIn', {token: resp.data.token, user: resp.data.user});
           }
         }
       );
@@ -79,7 +111,7 @@ export default new Vuex.Store({
   },
   getters: {
     isLoggedIn(state) {
-      return state.token != null;
+      return state.status.loggedIn;
     },
     gameTypes() {
       return [
@@ -89,7 +121,21 @@ export default new Vuex.Store({
       ]
     },
     currentUser(state) {
-      return state.currentUser;
+      return state.user;
+    },
+    loggedCurrentUser(state) {
+      let token = state.token;
+      let payload;
+      if (token) {
+        payload = token.split(".")[1];
+        payload = window.atob(payload);
+        let user = JSON.parse(payload);
+        if (user.exp > Date.now() / 1000) {
+           return user;
+        }
+      } 
+      
+      return null;
     }
   },
   modules: {

@@ -37,7 +37,10 @@ export default {
                 request.then(resp => {
                     this.loading = false;
                     this.items = resp.data;
-                });
+                })
+                .catch(err => {
+                    this.notify('Error al buscar juego', 'error');
+                })
             }
         }
     }

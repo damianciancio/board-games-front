@@ -18,6 +18,9 @@ export default {
         request.then(resp => {
             this.plays = resp.data;
         })
+        .catch(err => {
+            this.notify('Error al obtener las partidas el usuario actual', 'error');
+        })
     },
     methods: {
     }

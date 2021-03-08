@@ -8,10 +8,10 @@ const GamesStore = {
             return axios.get(store.state.apiRoot + "/games", {params: {q: q}});
         },
         addGameToCurrentUser(store, _id) {
-            return axios.post(store.state.apiRoot + '/players/' + store.state.currentUser._id + "/games",{game: _id});
+            return axios.post(store.state.apiRoot + '/players/' + store.getters.currentUser._id + "/games",{game: _id});
         },
         getCurrentUserGames(store){
-          var request = axios.get(`${store.state.apiRoot}/players/${store.state.currentUser._id}/games`);
+          var request = axios.get(`${store.state.apiRoot}/players/${store.getters.currentUser._id}/games`);
           return request;
         }
     }

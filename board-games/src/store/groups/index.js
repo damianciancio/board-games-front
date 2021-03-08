@@ -16,6 +16,9 @@ const GroupsStore = {
         updateGroupMemberStatus(store, {user_id, group_id, status}) {
             return axios.put(store.state.apiRoot + "/groups/" + group_id + "/members/" + user_id, {newStatus: status});
         },
+        requestJoinToGroup(store, {id_user, id_group}) {
+            return store.dispatch('addUserMember',{user_id: id_user, group_id: id_group, initialStatus: 'pending'});
+        }
     }
 }
 

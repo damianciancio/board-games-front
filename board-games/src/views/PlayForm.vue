@@ -87,7 +87,7 @@ export default {
         }
     },
     mounted() {
-        let request = this.$store.dispatch('getCurrentUserGroups');
+        let request = this.$store.dispatch('getCurrentUserGroups', {status: 'accepted'});
         request.then(resp => {
             if (resp.status == 200) {
                 this.groups = resp.data.groups;
@@ -119,9 +119,10 @@ export default {
                 let request = this.$store.dispatch('savePlay', this.play);
                 request.then(resp => {
                     if (resp.status == 200) {
-                        alert('Partida guardada correctamente');
+                        this.notify('Partida guardada correctamente');
+                        this.$router.push('/my-groups');
                     } else {
-                        alert('Hubo un error al guardar la partida');
+                        this.notify('Hubo un error al guardar la partida');
                     }
                 })
                 .catch(err => {
@@ -131,6 +132,34 @@ export default {
             }
         },
         validate() {
+            let errors = [];
+
+            if (this.play.duration == 0) {
+                errors.push('Ingrese duración');
+            }
+
+            if (!this.play.group) {
+                errors.push('Seleccione grupo');
+            }
+
+            if (!this.play.winner) {
+                errors.push('Seleccione el ganador de la partida');
+            }
+
+            if (!this.play.game) {
+                errors.push('Seleccione el juego de la partida');
+            }
+
+            if (this.play.name.trim() == "") {
+                errors.push('Ingrese un nombre para la partida');
+            }
+
+            if (errors.length) {
+                let app = this;
+                errors.forEach(err => app.notify(err, 'error'));
+                return false;
+            }
+
             return true;
         }
     }

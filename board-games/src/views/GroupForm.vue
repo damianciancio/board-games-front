@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Agregar juego</h1>
+        <h1>Crear Grupo</h1>
         <form>
             <div class="form-group">
                 <label>
@@ -31,11 +31,23 @@ export default {
                     if (resp.status == 200) {
                         this.$router.push({name: 'groupview', params:{id:resp.data._id}});
                     }
-                });
+                })
+                .catch(err => {
+                    this.notify('Ha ocurrido un error al guardar el grupo', 'error');
+                })
             }
         },
         validate() {
-            return this.group.name.trim() != "";
+            let errors = [];
+            if (this.group.name.trim() == "") {
+                errors.push('Ingrese un nombre para el grupo');
+            }
+            if (errors.length) {
+                let app = this;
+                errors.forEach(err => app.notify(err, 'error'));
+                return false;
+            }
+            return true;
         }
     }
 }

@@ -29,7 +29,10 @@ export default {
                 if (resp.status == 200) {
                     this.user = resp.data.player;
                 }
-            });
+            })
+            .catch(err => {
+                this.notify('Error al obtener el usuario', 'error');
+            })
     }
 }
 </script>

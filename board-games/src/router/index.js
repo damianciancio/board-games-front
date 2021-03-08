@@ -75,10 +75,11 @@ const routes = [
 
 const router = new VueRouter({
   routes,
-})
+});
 
 router.beforeEach((to, from, next) => {
-  if (!store.getters.isLoggedIn && to.name != 'login') {
+  console.log("router, store is logged in:", store.getters.isLoggedIn);
+  if (!store.getters.isLoggedIn && to.name != 'login' && to.name != 'register') {
       next({name: 'login'});
   } else {
     next();

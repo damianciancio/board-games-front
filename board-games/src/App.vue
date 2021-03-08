@@ -4,14 +4,26 @@
       app
       dark
     >
-      <router-link :to="{name: 'mygames'}">Mis juegos</router-link>
-      <router-link :to="{name: 'addgame'}">Agregar juego</router-link>
-      <router-link v-if="!isLoggedIn" :to="{name: 'userprofile', params: { id: $store.getters.currentUser._id }}">Agregar juego</router-link>
-      <router-link :to="{name: 'mygroups'}">Mis grupos</router-link>
-      <router-link :to="{name: 'newplay'}">Cargar partida</router-link>
+      <div class="container">
+        <div id="links-container" class="d-flex">
+          <template v-if="isLoggedIn">
+            <router-link :to="{name: 'mygames'}">Mis juegos</router-link>
+            <router-link :to="{name: 'addgame'}">Agregar juego</router-link>
+            <router-link :to="{name: 'userprofile', params: { id: $store.getters.currentUser._id }}">Mi cuenta</router-link>
+            <router-link :to="{name: 'mygroups'}">Mis grupos</router-link>
+            <router-link :to="{name: 'newplay'}">Cargar partida</router-link>
+            <a id="logout-link" v-on:click="logout()"> Cerrar sesión </a>
+          </template>
+          <template v-else>
+                <router-link :to="{name: 'login'}">Iniciar sesión</router-link>
+                <router-link :to="{name: 'register'}">Registrarse</router-link>
+          </template>
+        </div>
+      </div>
     </v-app-bar>
 
     <v-main>
+      <notifications group="boardgamesnotifications" />
       <div id="main-container" class="container">
         <router-view></router-view>
       </div>
@@ -41,15 +53,25 @@ export default {
     PlayDetails
   },
   mounted() {
-    let accessToken = window.localStorage.getItem('board_games_access_token');
-    if (accessToken) {
-      this.$store.commit('setToken', accessToken);
-      this.$store.commit('updateHeaders');
+    console.log(this.isLoggedIn)
+    if (this.isLoggedIn) {
+      let req = this.$store.dispatch('loadCurrentUser');
+      req.then(resp => {
+        if (resp.status == 200) {
+          this.$router.push({name: 'mygroups'});
+        }
+      })
+    }
+  },
+  computed: {
+    isLoggedIn() {
+      return this.$store.getters.isLoggedIn;
     }
   },
   methods: {
-    isLoggedIn() {
-      return this.$store.getters.currentUser != null;
+    logout() {
+      this.$store.dispatch('logout');
+      this.$router.push({name: 'login'});
     }
   },
   data: () => ({
@@ -58,7 +80,19 @@ export default {
 };
 </script>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@500&display=swap');
 #main-container {
   padding-top: 40px;;
+}
+
+#logout-link {
+  margin-left: auto;
+}
+
+#links-container a {
+  padding: 0 10px;
+}
+* {
+  font-family: 'Ubuntu', sans-serif;
 }
 </style>

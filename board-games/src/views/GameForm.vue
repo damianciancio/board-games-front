@@ -81,6 +81,24 @@ export default {
             }
         },
         validate() {
+            let errors = [];
+            if (this.game.name.trim() == "") {
+                errors.push("Ingrese el nombre del juego")
+            }
+            if (!this.game.duration) {
+                errors.push("Ingrese la duración del juego")
+            }
+
+            if (!this.game.type) {
+                errors.push("Ingrese el tipo de juego")
+            }
+
+            if (errors.length) {
+                let app = this;
+                errors.forEach(err => app.notify(err,'error'));
+                return false;
+            }
+
             return true;
         }
     }
